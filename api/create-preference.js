@@ -20,11 +20,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email } = req.body;
+    const { email, ra_limit } = req.body;
 
     if (!email || !email.includes('@')) {
       return res.status(400).json({ error: 'E-mail inválido ou não fornecido.' });
     }
+
+    // Definir valores baseados no ra_limit
+    const limit = parseInt(ra_limit, 10) || 1;
+    let planTitle = "AVA Oryon - Plano Estudante";
+    let planPrice = 29.90;
+
+    if (limit === 10) {
+      planTitle = "AVA Oryon - Plano Agência";
+      planPrice = 59.90;
+    } // default para 1 (Estudante)
 
     // Token do Mercado Pago fornecido pelo usuário
     const ACCESS_TOKEN = 'APP_USR-7626769308027334-032719-96958d6949994474159460a9c8b4f29c-2244840287';
@@ -33,17 +43,18 @@ export default async function handler(req, res) {
     const preferenceData = {
       items: [
         {
-          title: "Licença Studio Oryon - Acesso Mensal",
+          title: planTitle,
           quantity: 1,
           currency_id: "BRL",
-          unit_price: 29.90
+          unit_price: planPrice
         }
       ],
       payer: {
         email: email
       },
       metadata: {
-        email: email // O LUGAR SEGURO ONDE O WEBHOOK VAI LER DEPOIS (LGPD Bypass)
+        email: email, // O LUGAR SEGURO ONDE O WEBHOOK VAI LER DEPOIS (LGPD Bypass)
+        ra_limit: limit
       },
       statement_descriptor: "Studio Oryon", // Muda a fatura do Cartão de Crédito
       back_urls: {

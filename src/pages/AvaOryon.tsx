@@ -164,16 +164,14 @@ const FAQItem = ({
 const AvaOryon = () => {
   const navigate = useNavigate();
 
-  // Inline Checkout State
-  const [expandedSection, setExpandedSection] = useState<'hero' | 'bottom' | 'download' | null>(null);
+  // Checkout State
   const [checkoutEmail, setCheckoutEmail] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
 
-  const handleCheckoutSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCheckoutSubmit = async (limit: number) => {
     if (!checkoutEmail || !checkoutEmail.includes("@")) {
-      setCheckoutError("Por favor, insira um e-mail válido.");
+      setCheckoutError("Por favor, insira um e-mail válido antes de escolher o plano.");
       return;
     }
 
@@ -181,14 +179,12 @@ const AvaOryon = () => {
     setCheckoutError("");
 
     try {
-      // 🚀 CHAMA A SERVERLESS FUNCTION NA VERCEL:
-      // O script Node (api/create-preference.js) usa o Access Token e o e-mail para criar a preference no Mercado Pago
       const apiUrl = import.meta.env.VITE_MP_PREFERENCE_URL || "/api/create-preference";
       
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: checkoutEmail }),
+        body: JSON.stringify({ email: checkoutEmail, ra_limit: limit }),
       });
 
       if (!response.ok) {
@@ -205,61 +201,15 @@ const AvaOryon = () => {
     } catch (err) {
       console.error(err);
       setCheckoutError("Não foi possível gerar a cobrança agora.");
-      // Opcional: Fallback
-      // window.location.href = "https://mpago.li/2kLegqy";
     } finally {
       setCheckoutLoading(false);
     }
   };
 
-  const renderCheckoutForm = (sectionId: string) => (
-    <motion.form
-      key={`checkout-form-${sectionId}`}
-      initial={{ height: 0, opacity: 0, marginTop: 0 }}
-      animate={{ height: "auto", opacity: 1, marginTop: 16 }}
-      exit={{ height: 0, opacity: 0, marginTop: 0 }}
-      className="w-full max-w-md mx-auto overflow-hidden text-left"
-      onSubmit={handleCheckoutSubmit}
-    >
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-5 md:p-6 backdrop-blur-md">
-        <p className="text-sm text-gray-400 mb-4 whitespace-normal text-center leading-relaxed flex flex-col items-center">
-          <Mail className="w-5 h-5 text-purple-400 mb-2" />
-          Sua chave de acesso será enviada <strong>imediatamente</strong> para o e-mail abaixo após a confirmação:
-        </p>
-        <div className="relative mb-4">
-          <input
-            type="email"
-            value={checkoutEmail}
-            onChange={(e) => setCheckoutEmail(e.target.value)}
-            placeholder="seu.melhor@email.com"
-            className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-center"
-            disabled={checkoutLoading}
-            required
-          />
-        </div>
-        {checkoutError && (
-          <p className="text-red-400 text-xs mb-4 text-center">{checkoutError}</p>
-        )}
-        <button
-          type="submit"
-          disabled={checkoutLoading}
-          className="w-full relative group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-base text-white bg-purple-600 disabled:opacity-70 transition-all hover:bg-purple-500 shadow-[0_4px_20px_rgba(147,51,234,0.3)] hover:shadow-[0_4px_30px_rgba(147,51,234,0.5)]"
-        >
-          {checkoutLoading ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Preparando...
-            </>
-          ) : (
-            <>
-              <Zap className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              Continuar com Pagamento
-            </>
-          )}
-        </button>
-      </div>
-    </motion.form>
-  );
+  const scrollToPricing = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <Layout>
@@ -355,10 +305,7 @@ const AvaOryon = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 {/* Primary CTA */}
                 <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setExpandedSection(expandedSection === 'hero' ? null : 'hero');
-                  }}
+                  onClick={scrollToPricing}
                   id="ava-oryon-cta-buy"
                   className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-base text-black bg-white overflow-hidden transition-transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
                 >
@@ -375,11 +322,6 @@ const AvaOryon = () => {
                   Pagamento seguro via Mercado Pago
                 </p>
               </div>
-
-              {/* Formulário Inline que expande abaixo do botão */}
-              <AnimatePresence>
-                {expandedSection === 'hero' && renderCheckoutForm('hero')}
-              </AnimatePresence>
             </motion.div>
 
             {/* Download Link */}
@@ -544,10 +486,7 @@ const AvaOryon = () => {
             </p>
 
             <button
-              onClick={(e) => {
-                e.preventDefault();
-                setExpandedSection(expandedSection === 'bottom' ? null : 'bottom');
-              }}
+              onClick={scrollToPricing}
               id="ava-oryon-cta-buy-bottom"
               className="group relative inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full font-bold text-lg overflow-hidden bg-white text-black transition-transform hover:scale-105 shadow-[0_0_60px_rgba(255,255,255,0.2)]"
             >
@@ -557,14 +496,212 @@ const AvaOryon = () => {
                 Adquirir Licença Agora
               </span>
             </button>
-            <AnimatePresence>
-              {expandedSection === 'bottom' && renderCheckoutForm('bottom')}
-            </AnimatePresence>
 
             <p className="mt-5 text-gray-600 text-sm">
               Pagamento via Mercado Pago · Confirmação imediata
             </p>
           </motion.div>
+        </section>
+
+        {/* ── COMO FUNCIONA SECTION ── */}
+        <section className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block mb-4 text-xs uppercase tracking-[0.4em] text-gray-500 font-mono">
+              O Novo Fluxo
+            </span>
+            <h2
+              className="text-3xl md:text-5xl font-bold text-white mb-6"
+              style={{ fontFamily: "'Sora', sans-serif" }}
+            >
+              Como Funciona em{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+                3 Passos Rápidos
+              </span>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10">
+            {[
+              { num: "01", title: "Assine", desc: "Escolha o plano que cabe no seu bolso (Estudante ou Agência)." },
+              { num: "02", title: "Acesse", desc: "Faça o download e logue no App com o e-mail da compra." },
+              { num: "03", title: "Dê o Play", desc: "Insira o RA/Senha da Unime e deixe o Oryon trabalhar por você." },
+            ].map((step, i) => (
+              <motion.div
+                key={step.num}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                className="relative rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center"
+              >
+                <div className="w-12 h-12 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl font-bold mx-auto mb-6">
+                  {step.num}
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3" style={{ fontFamily: "'Sora', sans-serif" }}>
+                  {step.title}
+                </h3>
+                <p className="text-gray-400 text-sm md:text-base leading-relaxed">
+                  {step.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── PRICING SECTION (THE GRID) ── */}
+        <section id="pricing" className="relative z-10 max-w-5xl mx-auto px-6 py-24 border-t border-white/5">
+          <div className="text-center mb-16">
+            <span className="inline-block mb-4 text-xs uppercase tracking-[0.4em] text-purple-400 font-mono">
+              Planos e Preços
+            </span>
+            <h2
+              className="text-4xl md:text-5xl font-bold text-white mb-6"
+              style={{ fontFamily: "'Sora', sans-serif" }}
+            >
+              Escolha seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Poder</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Planos baseados no seu limite de alunos. Libere sua produtividade acadêmica.
+            </p>
+          </div>
+
+          <div className="max-w-xl mx-auto mb-16 text-center">
+            <h3 className="text-2xl font-bold text-white mb-4">1. Identificação</h3>
+            <p className="text-gray-400 mb-6 text-sm">
+              Use o <strong className="text-purple-400">mesmo e-mail</strong> que você usará para logar no App.
+            </p>
+            <div className="relative">
+              <input
+                type="email"
+                value={checkoutEmail}
+                onChange={(e) => setCheckoutEmail(e.target.value)}
+                placeholder="seu.melhor@email.com"
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-center text-white placeholder:text-gray-600 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                disabled={checkoutLoading}
+                required
+              />
+            </div>
+            {checkoutError && (
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-400 text-sm mt-3"
+              >
+                {checkoutError}
+              </motion.p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* PLANO ESTUDANTE */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-[#161B22] border border-white/10 rounded-3xl p-8 hover:border-purple-500/30 transition-all flex flex-col relative overflow-hidden"
+            >
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-white mb-2">Plano Estudante</h3>
+                <p className="text-gray-400 text-sm">Ideal para uso individual</p>
+              </div>
+              <div className="mb-8 flex items-end gap-2">
+                <span className="text-4xl font-bold text-white">R$ 29,90</span>
+                <span className="text-gray-500 text-sm pb-1">/ semestre</span>
+              </div>
+              <ul className="space-y-4 mb-10 flex-1">
+                <li className="flex items-center gap-3 text-gray-300 text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
+                  Limite de 1 RA <span className="text-gray-500 text-xs ml-1">(No primeiro acesso)</span>
+                </li>
+                <li className="flex items-center gap-3 text-gray-300 text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
+                  Automação Completa
+                </li>
+                <li className="flex items-center gap-3 text-gray-300 text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
+                  Dashboard e Countdown
+                </li>
+                <li className="flex items-center gap-3 text-gray-300 text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
+                  Suporte via Comunidade
+                </li>
+              </ul>
+              <button
+                onClick={() => handleCheckoutSubmit(1)}
+                disabled={checkoutLoading}
+                className="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-colors disabled:opacity-50"
+              >
+                {checkoutLoading ? "Processando..." : "Assinar Plano Estudante"}
+              </button>
+            </motion.div>
+
+            {/* PLANO AGÊNCIA */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="bg-[#161B22] border border-purple-500/50 shadow-[0_0_30px_rgba(139,92,246,0.15)] rounded-3xl p-8 relative flex flex-col"
+            >
+              <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
+                <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg">
+                  MELHOR CUSTO-BENEFÍCIO
+                </span>
+              </div>
+
+              <div className="mb-8 mt-2">
+                <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">Plano Agência</h3>
+                <p className="text-gray-400 text-sm">Para quem presta serviço</p>
+              </div>
+              <div className="mb-8 flex items-end gap-2">
+                <span className="text-4xl font-bold text-white">R$ 59,90</span>
+                <span className="text-gray-500 text-sm pb-1">/ semestre</span>
+              </div>
+              <ul className="space-y-4 mb-10 flex-1">
+                <li className="flex items-center gap-3 text-white text-sm font-medium">
+                  <Zap className="w-5 h-5 text-pink-400 shrink-0 fill-pink-400/20" />
+                  Limite de 10 RAs <span className="text-gray-400 text-xs font-normal ml-1">(Na mesma chave)</span>
+                </li>
+                <li className="flex items-center gap-3 text-gray-300 text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
+                  Prioridade em Atualizações
+                </li>
+                <li className="flex items-center gap-3 text-gray-300 text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
+                  Suporte Direto (WhatsApp)
+                </li>
+                <li className="flex items-center gap-3 text-gray-300 text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
+                  Painel de Gestão
+                </li>
+              </ul>
+              <button
+                onClick={() => handleCheckoutSubmit(10)}
+                disabled={checkoutLoading}
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
+              >
+                {checkoutLoading ? "Processando..." : "Assinar Plano Agência"}
+              </button>
+            </motion.div>
+          </div>
+
+          <div className="mt-14 text-center">
+            <a
+              href="https://wa.me/55xx99999999" // TODO: Add actual support link if needed
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm hover:underline underline-offset-4"
+            >
+              Já tem uma licença e quer adicionar mais RAs? <span className="text-purple-400">[Clique aqui para Upgrade]</span>
+            </a>
+          </div>
         </section>
 
         {/* ── FAQ SECTION ── */}
@@ -647,18 +784,12 @@ const AvaOryon = () => {
             <p className="mt-6 text-gray-600 text-xs">
               Não possui uma licença ainda?{" "}
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  setExpandedSection(expandedSection === 'download' ? null : 'download');
-                }}
+                onClick={scrollToPricing}
                 className="text-purple-400 hover:text-purple-300 transition-colors underline underline-offset-4"
               >
                 Adquirir agora
               </button>
             </p>
-            <AnimatePresence>
-              {expandedSection === 'download' && renderCheckoutForm('download')}
-            </AnimatePresence>
           </motion.div>
         </section>
 
