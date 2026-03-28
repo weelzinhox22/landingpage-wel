@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Studio Oryon | Digital Innovation Studio</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Studio Oryon - Estúdio de inovação digital especializado em experiências web imersivas, design de interface e desenvolvimento de software. Transformamos sua visão em realidade digital." />
+    <meta name="keywords" content="Studio Oryon, web design, desenvolvimento web, UI/UX design, frontend, backend, react, typescript, portfólio digital, sites imersivos, inovação digital, startup tecnologia, brasil" />
+    <meta name="author" content="Studio Oryon" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#020525" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://studiooryon.com/" />
+    <meta property="og:title" content="Studio Oryon | Digital Innovation Studio" />
+    <meta property="og:description" content="Transformando ideias em experiências digitais imersivas. Especialistas em Design e Tecnologia." />
+    <meta property="og:image" content="/assets/logo.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://studiooryon.com/" />
+    <meta property="twitter:title" content="Studio Oryon | Digital Innovation Studio" />
+    <meta property="twitter:description" content="Transformando ideias em experiências digitais imersivas. Especialistas em Design e Tecnologia." />
+    <meta property="twitter:image" content="/assets/logo.png" />
+    
+    <!-- Favicon -->
+    <link rel="canonical" href="https://studiooryon.com/" />
+    <link rel="icon" type="image/png" href="/assets/logonavbar.png" />
+    <link rel="apple-touch-icon" href="/assets/logonavbar.png" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script>
+      // Unregister service workers immediately, before React loads
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+        });
+        navigator.serviceWorker.ready.then(function(registration) {
+          registration.unregister();
+        });
+      }
+      // Clear all caches
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (let name of names) {
+            caches.delete(name);
+          }
+        });
+      }
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+
