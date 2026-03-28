@@ -181,9 +181,9 @@ const AvaOryon = () => {
     setCheckoutError("");
 
     try {
-      // 🚀 CHAMA O BACKEND PHP CRIADO:
-      // O script PHP usa o Access Token e o e-mail para criar a preference no Mercado Pago
-      const apiUrl = import.meta.env.VITE_MP_PREFERENCE_URL || "/backend/api/create-preference.php";
+      // 🚀 CHAMA A SERVERLESS FUNCTION NA VERCEL:
+      // O script Node (api/create-preference.js) usa o Access Token e o e-mail para criar a preference no Mercado Pago
+      const apiUrl = import.meta.env.VITE_MP_PREFERENCE_URL || "/api/create-preference";
       
       const response = await fetch(apiUrl, {
         method: "POST",
