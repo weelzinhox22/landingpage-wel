@@ -36,7 +36,7 @@ export default async function handler(req, res) {
           title: "Licença Studio Oryon - Acesso Mensal",
           quantity: 1,
           currency_id: "BRL",
-          unit_price: 39.90
+          unit_price: 1.0
         }
       ],
       payer: {
