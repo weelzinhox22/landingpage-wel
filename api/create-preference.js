@@ -36,7 +36,7 @@ export default async function handler(req, res) {
           title: "Licença Studio Oryon - Acesso Mensal",
           quantity: 1,
           currency_id: "BRL",
-          unit_price: 1.0
+          unit_price: 29.90
         }
       ],
       payer: {
@@ -45,6 +45,7 @@ export default async function handler(req, res) {
       metadata: {
         email: email // O LUGAR SEGURO ONDE O WEBHOOK VAI LER DEPOIS (LGPD Bypass)
       },
+      statement_descriptor: "Studio Oryon", // Muda a fatura do Cartão de Crédito
       back_urls: {
         success: "https://studiooryon.pro/",
         failure: "https://studiooryon.pro/",
