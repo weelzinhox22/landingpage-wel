@@ -181,9 +181,9 @@ const AvaOryon = () => {
     setCheckoutError("");
 
     try {
-      // 🚀 ATENÇÃO: Conecte esta URL ao seu Edge Function / Backend real (PHP/Node/Supabase).
-      // Ela deve retornar um JSON com "init_point" (URL do Mercado Pago).
-      const apiUrl = import.meta.env.VITE_MP_PREFERENCE_URL || "/api/create-preference";
+      // 🚀 CHAMA O BACKEND PHP CRIADO:
+      // O script PHP usa o Access Token e o e-mail para criar a preference no Mercado Pago
+      const apiUrl = import.meta.env.VITE_MP_PREFERENCE_URL || "/backend/api/create-preference.php";
       
       const response = await fetch(apiUrl, {
         method: "POST",
