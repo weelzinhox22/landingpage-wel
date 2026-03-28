@@ -15,6 +15,9 @@ import {
   CheckCircle2,
   Zap,
   ArrowLeft,
+  X,
+  Mail,
+  Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -161,6 +164,103 @@ const FAQItem = ({
 const AvaOryon = () => {
   const navigate = useNavigate();
 
+  // Inline Checkout State
+  const [expandedSection, setExpandedSection] = useState<'hero' | 'bottom' | 'download' | null>(null);
+  const [checkoutEmail, setCheckoutEmail] = useState("");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!checkoutEmail || !checkoutEmail.includes("@")) {
+      setCheckoutError("Por favor, insira um e-mail válido.");
+      return;
+    }
+
+    setCheckoutLoading(true);
+    setCheckoutError("");
+
+    try {
+      // 🚀 ATENÇÃO: Conecte esta URL ao seu Edge Function / Backend real (PHP/Node/Supabase).
+      // Ela deve retornar um JSON com "init_point" (URL do Mercado Pago).
+      const apiUrl = import.meta.env.VITE_MP_PREFERENCE_URL || "/api/create-preference";
+      
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: checkoutEmail }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao gerar link de pagamento.");
+      }
+
+      const data = await response.json();
+
+      if (data.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        throw new Error("Link (init_point) não retornado pela API.");
+      }
+    } catch (err) {
+      console.error(err);
+      setCheckoutError("Não foi possível gerar a cobrança agora.");
+      // Opcional: Fallback
+      // window.location.href = "https://mpago.li/2kLegqy";
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
+  const renderCheckoutForm = (sectionId: string) => (
+    <motion.form
+      key={`checkout-form-${sectionId}`}
+      initial={{ height: 0, opacity: 0, marginTop: 0 }}
+      animate={{ height: "auto", opacity: 1, marginTop: 16 }}
+      exit={{ height: 0, opacity: 0, marginTop: 0 }}
+      className="w-full max-w-md mx-auto overflow-hidden text-left"
+      onSubmit={handleCheckoutSubmit}
+    >
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-5 md:p-6 backdrop-blur-md">
+        <p className="text-sm text-gray-400 mb-4 whitespace-normal text-center leading-relaxed flex flex-col items-center">
+          <Mail className="w-5 h-5 text-purple-400 mb-2" />
+          Sua chave de acesso será enviada <strong>imediatamente</strong> para o e-mail abaixo após a confirmação:
+        </p>
+        <div className="relative mb-4">
+          <input
+            type="email"
+            value={checkoutEmail}
+            onChange={(e) => setCheckoutEmail(e.target.value)}
+            placeholder="seu.melhor@email.com"
+            className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-center"
+            disabled={checkoutLoading}
+            required
+          />
+        </div>
+        {checkoutError && (
+          <p className="text-red-400 text-xs mb-4 text-center">{checkoutError}</p>
+        )}
+        <button
+          type="submit"
+          disabled={checkoutLoading}
+          className="w-full relative group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-base text-white bg-purple-600 disabled:opacity-70 transition-all hover:bg-purple-500 shadow-[0_4px_20px_rgba(147,51,234,0.3)] hover:shadow-[0_4px_30px_rgba(147,51,234,0.5)]"
+        >
+          {checkoutLoading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Preparando...
+            </>
+          ) : (
+            <>
+              <Zap className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              Continuar com Pagamento
+            </>
+          )}
+        </button>
+      </div>
+    </motion.form>
+  );
+
   return (
     <Layout>
       <SEO />
@@ -245,33 +345,41 @@ const AvaOryon = () => {
               <span className="text-gray-300">registro de histórico</span>.
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTA Container */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.7 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              className="flex flex-col items-center justify-center w-full"
             >
-              {/* Primary CTA */}
-              <a
-                href="https://mpago.li/2kLegqy"
-                target="_blank"
-                rel="noopener noreferrer"
-                id="ava-oryon-cta-buy"
-                className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-base text-black bg-white overflow-hidden transition-transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                <ShoppingCart className="relative z-10 w-5 h-5 group-hover:text-white transition-colors duration-300" />
-                <span className="relative z-10 group-hover:text-white transition-colors duration-300">
-                  Adquirir Licença Agora
-                </span>
-              </a>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                {/* Primary CTA */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setExpandedSection(expandedSection === 'hero' ? null : 'hero');
+                  }}
+                  id="ava-oryon-cta-buy"
+                  className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-base text-black bg-white overflow-hidden transition-transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                  <ShoppingCart className="relative z-10 w-5 h-5 group-hover:text-white transition-colors duration-300" />
+                  <span className="relative z-10 group-hover:text-white transition-colors duration-300">
+                    Adquirir Licença Agora
+                  </span>
+                </button>
 
-              {/* Secondary — info */}
-              <p className="text-gray-500 text-sm flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                Pagamento seguro via Mercado Pago
-              </p>
+                {/* Secondary — info */}
+                <p className="text-gray-500 text-sm flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                  Pagamento seguro via Mercado Pago
+                </p>
+              </div>
+
+              {/* Formulário Inline que expande abaixo do botão */}
+              <AnimatePresence>
+                {expandedSection === 'hero' && renderCheckoutForm('hero')}
+              </AnimatePresence>
             </motion.div>
 
             {/* Download Link */}
@@ -435,10 +543,11 @@ const AvaOryon = () => {
               Pagamento seguro e chave enviada automaticamente.
             </p>
 
-            <a
-              href="https://mpago.li/2kLegqy"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setExpandedSection(expandedSection === 'bottom' ? null : 'bottom');
+              }}
               id="ava-oryon-cta-buy-bottom"
               className="group relative inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full font-bold text-lg overflow-hidden bg-white text-black transition-transform hover:scale-105 shadow-[0_0_60px_rgba(255,255,255,0.2)]"
             >
@@ -447,7 +556,10 @@ const AvaOryon = () => {
               <span className="relative z-10 group-hover:text-white transition-colors duration-300">
                 Adquirir Licença Agora
               </span>
-            </a>
+            </button>
+            <AnimatePresence>
+              {expandedSection === 'bottom' && renderCheckoutForm('bottom')}
+            </AnimatePresence>
 
             <p className="mt-5 text-gray-600 text-sm">
               Pagamento via Mercado Pago · Confirmação imediata
@@ -534,15 +646,19 @@ const AvaOryon = () => {
 
             <p className="mt-6 text-gray-600 text-xs">
               Não possui uma licença ainda?{" "}
-              <a
-                href="https://mpago.li/2kLegqy"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setExpandedSection(expandedSection === 'download' ? null : 'download');
+                }}
                 className="text-purple-400 hover:text-purple-300 transition-colors underline underline-offset-4"
               >
                 Adquirir agora
-              </a>
+              </button>
             </p>
+            <AnimatePresence>
+              {expandedSection === 'download' && renderCheckoutForm('download')}
+            </AnimatePresence>
           </motion.div>
         </section>
 
