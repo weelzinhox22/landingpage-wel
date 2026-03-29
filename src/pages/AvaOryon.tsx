@@ -180,7 +180,7 @@ const AvaOryon = () => {
 
     try {
       const apiUrl = import.meta.env.VITE_MP_PREFERENCE_URL || "/api/create-preference";
-      
+
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -613,7 +613,7 @@ const AvaOryon = () => {
               </div>
               <div className="mb-8 flex items-end gap-2">
                 <span className="text-4xl font-bold text-white">R$ 29,90</span>
-                <span className="text-gray-500 text-sm pb-1">/ semestre</span>
+                <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
               </div>
               <ul className="space-y-4 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-gray-300 text-sm">
@@ -662,7 +662,7 @@ const AvaOryon = () => {
               </div>
               <div className="mb-8 flex items-end gap-2">
                 <span className="text-4xl font-bold text-white">R$ 59,90</span>
-                <span className="text-gray-500 text-sm pb-1">/ semestre</span>
+                <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
               </div>
               <ul className="space-y-4 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-white text-sm font-medium">
@@ -694,7 +694,7 @@ const AvaOryon = () => {
 
           <div className="mt-14 text-center">
             <a
-              href="https://wa.me/55xx99999999" // TODO: Add actual support link if needed
+              href="https://wa.me/+5571991373142" // TODO: Add actual support link if needed
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm hover:underline underline-offset-4"
