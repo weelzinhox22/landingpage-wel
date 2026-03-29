@@ -776,7 +776,7 @@ const AvaOryon = () => {
                 className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full border border-purple-500/30 bg-purple-500/10 text-white text-sm font-medium hover:bg-purple-500/20 hover:border-purple-500/60 transition-all group"
               >
                 <Download className="w-4 h-4 text-purple-400 group-hover:animate-bounce" />
-                Studio_Oryon_Setup_v1.0.0.exe
+                Studio_Oryon_Setup_v1.1.2.exe
               </a>
               <span className="text-gray-600 text-xs">Windows 10+</span>
             </div>
