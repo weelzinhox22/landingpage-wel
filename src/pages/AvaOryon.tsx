@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import SEO from "@/components/SEO";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   Bot,
   History,
@@ -18,6 +18,10 @@ import {
   X,
   Mail,
   Loader2,
+  Lock,
+  CloudLightning,
+  Cpu,
+  Database,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -27,42 +31,42 @@ import { useNavigate } from "react-router-dom";
 // ─────────────────────────────────────────────
 const features = [
   {
-    icon: Zap,
-    title: "Automação Inteligente",
+    icon: Lock,
+    title: "Protocolo de Blindagem",
     description:
-      "Execução de atividades e leitura de conteúdos de forma orgânica e natural, simulando o comportamento humano para máxima segurança.",
+      "Login Criptografado (AES-256). Seus dados de acesso ao portal nunca saem do seu computador.",
     gradient: "from-purple-500/20 to-violet-600/10",
-    borderGlow: "hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.15)]",
-    iconColor: "text-purple-400",
+    borderGlow: "hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)]",
+    iconColor: "text-purple-400 group-hover:animate-pulse",
     iconBg: "bg-purple-500/20 border-purple-500/30",
   },
   {
-    icon: History,
-    title: "Histórico de Atividades",
+    icon: CloudLightning,
+    title: "Check-in Serverless",
     description:
-      "Registro completo de tudo que foi executado, salvo no seu %AppData% local. Acompanhe cada ação com timestamps precisos.",
+      "Licença Validada em Tempo Real via Supabase. Autenticação instantânea sem delays.",
     gradient: "from-blue-500/20 to-cyan-600/10",
-    borderGlow: "hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
+    borderGlow: "hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]",
     iconColor: "text-blue-400",
     iconBg: "bg-blue-500/20 border-blue-500/30",
   },
   {
-    icon: Shield,
-    title: "Segurança Supabase",
+    icon: Cpu,
+    title: "Executável Nativo",
     description:
-      "Login criptografado e validação de licença em tempo real via Supabase. Seus dados são protegidos com criptografia de ponta.",
+      "Engine em V8 compilada. Instalador único (.exe) otimizado para Windows, sem necessidade de instalar dependências.",
     gradient: "from-emerald-500/20 to-green-600/10",
-    borderGlow: "hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]",
+    borderGlow: "hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]",
     iconColor: "text-emerald-400",
     iconBg: "bg-emerald-500/20 border-emerald-500/30",
   },
   {
-    icon: Package,
-    title: "Simplicidade Total",
+    icon: Database,
+    title: "Local Storage",
     description:
-      "Um único executável (.exe) leve e rápido. Sem instalações complexas, sem dependências extras. Clique e use imediatamente.",
+      "Histórico Salvo Localmente. Seus logs de progresso ficam guardados apenas para o seu controle, com privacidade total.",
     gradient: "from-pink-500/20 to-rose-600/10",
-    borderGlow: "hover:border-pink-500/50 hover:shadow-[0_0_30px_rgba(236,72,153,0.15)]",
+    borderGlow: "hover:border-pink-500/50 hover:shadow-[0_0_30px_rgba(236,72,153,0.2)]",
     iconColor: "text-pink-400",
     iconBg: "bg-pink-500/20 border-pink-500/30",
   },
@@ -73,29 +77,20 @@ const features = [
 // ─────────────────────────────────────────────
 const faqs = [
   {
+    question: "O robô pode ser detectado pela Unime?",
+    answer: "Não. O Oryon simula movimentos humanos e intervalos randômicos de cliques, tornando o comportamento indistinguível de um usuário real.",
+  },
+  {
+    question: "Posso usar em dois computadores?",
+    answer: "A licença é vinculada ao seu Hardware ID (HWID). Para trocar de máquina, entre em contato com nosso suporte.",
+  },
+  {
+    question: "O pagamento é único?",
+    answer: "O acesso é semestral, acompanhando o ciclo do AVA da faculdade.",
+  },
+  {
     question: "Como recebo minha chave de licença?",
-    answer:
-      "Após a confirmação do pagamento via Mercado Pago, você receberá sua chave de licença por e-mail em até 5 minutos. A chave é gerada automaticamente e vinculada ao seu CPF. Caso não receba, entre em contato pelo WhatsApp.",
-  },
-  {
-    question: "É seguro usar o AVA-Oryon?",
-    answer:
-      "Sim. O AVA-Oryon foi desenvolvido com foco em segurança: a automação simula comportamento humano orgânico, seu login é criptografado via Supabase, e todos os dados ficam armazenados localmente no seu computador. Não armazenamos suas senhas acadêmicas.",
-  },
-  {
-    question: "Funciona em quais matérias?",
-    answer:
-      "O AVA-Oryon é compatível com a maioria das atividades do AVA Unime, incluindo leitura de conteúdos, questionários e atividades de múltipla escolha. Para atividades dissertativas, o sistema identifica e pula automaticamente. A compatibilidade pode variar conforme atualizações da plataforma.",
-  },
-  {
-    question: "A licença tem validade?",
-    answer:
-      "Sim, a licença tem validade de 30 dias a partir da data de ativação. Após vencer, basta renovar para continuar usando. Fique atento às nossas promoções via WhatsApp e Instagram.",
-  },
-  {
-    question: "Funciona em qualquer computador?",
-    answer:
-      "O AVA-Oryon funciona em qualquer computador com Windows 10 ou superior. Não é necessário instalar Python, Node.js ou qualquer dependência. Basta baixar o instalador (.exe) e executar.",
+    answer: "Após a confirmação do pagamento via Mercado Pago, você receberá sua chave por e-mail, e ela será vinculada ao seu e-mail da compra.",
   },
 ];
 
@@ -119,42 +114,92 @@ const FAQItem = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="border-b border-white/10 last:border-0"
+      className="mb-4 last:mb-0 group/faq cursor-pointer"
     >
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between py-5 text-left gap-4 group"
+      <div 
+        className={`border rounded-xl overflow-hidden backdrop-blur-xl transition-all duration-300 ${
+          isOpen 
+            ? 'bg-white/[0.04] border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.1)]' 
+            : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.03] hover:border-purple-500/20 hover:shadow-[0_0_20px_rgba(168,85,247,0.05)]'
+        }`}
       >
-        <span className="text-white font-medium text-base group-hover:text-purple-300 transition-colors">
-          {question}
-        </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="flex-shrink-0"
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between p-6 text-left gap-4 group"
         >
-          <ChevronDown
-            className={`w-5 h-5 transition-colors ${isOpen ? "text-purple-400" : "text-gray-500"
-              }`}
-          />
-        </motion.div>
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden"
+          <span 
+            className={`font-bold text-base transition-colors duration-300 ${
+              isOpen ? 'text-purple-300' : 'text-white group-hover:text-purple-200'
+            }`}
           >
-            <p className="pb-5 text-gray-400 leading-relaxed text-sm md:text-base pr-8">
-              {answer}
-            </p>
+            {question}
+          </span>
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-300 ${
+              isOpen ? 'bg-purple-500/20 text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.2)]' : 'bg-white/5 text-gray-500 group-hover:bg-purple-500/10 group-hover:text-purple-300'
+            }`}
+          >
+            <ChevronDown className="w-5 h-5" />
           </motion.div>
-        )}
-      </AnimatePresence>
+        </button>
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="p-6 pt-0 relative">
+                <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-purple-500/30 to-pink-500/5" />
+                <p className="text-gray-400 leading-relaxed text-sm md:text-base pr-8 pt-5">
+                  {answer}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.div>
+  );
+};
+
+// ─────────────────────────────────────────────
+// Tilt Card Wrapper Component
+// ─────────────────────────────────────────────
+const TiltCard = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springConfig = { damping: 20, stiffness: 150 };
+  const mouseXSpring = useSpring(x, springConfig);
+  const mouseYSpring = useSpring(y, springConfig);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
+
+  return (
+    <div style={{ perspective: "1200px" }} className="w-full h-full">
+      <motion.div
+        style={{ rotateX, rotateY }}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const width = rect.width;
+          const height = rect.height;
+          const mouseX = e.clientX - rect.left;
+          const mouseY = e.clientY - rect.top;
+          x.set(mouseX / width - 0.5);
+          y.set(mouseY / height - 0.5);
+        }}
+        onMouseLeave={() => {
+          x.set(0);
+          y.set(0);
+        }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 };
 
@@ -170,8 +215,11 @@ const AvaOryon = () => {
   const [checkoutError, setCheckoutError] = useState("");
 
   const handleCheckoutSubmit = async (limit: number) => {
-    if (!checkoutEmail || !checkoutEmail.includes("@")) {
-      setCheckoutError("Por favor, insira um e-mail válido antes de escolher o plano.");
+    const cleanEmail = checkoutEmail ? checkoutEmail.trim().toLowerCase() : "";
+    const emailRegex = /^[^\s@<>'\"()\[\]]+@[^\s@<>'\"()\[\]]+\.[^\s@<>'\"()\[\]]{2,}$/;
+
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+      setCheckoutError("Por favor, insira um e-mail válido e seguro antes de faturar.");
       return;
     }
 
@@ -184,7 +232,7 @@ const AvaOryon = () => {
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: checkoutEmail, ra_limit: limit }),
+        body: JSON.stringify({ email: cleanEmail, ra_limit: limit }),
       });
 
       if (!response.ok) {
@@ -379,7 +427,7 @@ const AvaOryon = () => {
             className="text-center mb-16"
           >
             <span className="inline-block mb-4 text-xs uppercase tracking-[0.4em] text-gray-500 font-mono">
-              Principais Recursos
+              Tecnologia e Segurança
             </span>
             <h2
               className="text-3xl md:text-5xl font-bold text-white"
@@ -402,28 +450,32 @@ const AvaOryon = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  className={`relative rounded-2xl border border-white/10 bg-gradient-to-br ${feature.gradient} p-7 overflow-hidden transition-all duration-500 ${feature.borderGlow} group`}
+                  className="h-full"
                 >
-                  {/* bg shimmer */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent" />
-                  </div>
+                  <TiltCard className={`relative h-full rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8 transition-all duration-500 ${feature.borderGlow} group`}>
+                    {/* bg shimmer */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[inherit] overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] to-transparent" />
+                    </div>
 
-                  <div
-                    className={`w-12 h-12 rounded-xl border ${feature.iconBg} flex items-center justify-center mb-5`}
-                  >
-                    <Icon className={`w-6 h-6 ${feature.iconColor}`} />
-                  </div>
+                    <div className="pointer-events-none">
+                      <div
+                        className={`w-14 h-14 rounded-xl border ${feature.iconBg} flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}
+                      >
+                        <Icon className={`w-7 h-7 ${feature.iconColor}`} />
+                      </div>
 
-                  <h3
-                    className="text-xl font-bold text-white mb-3"
-                    style={{ fontFamily: "'Sora', sans-serif" }}
-                  >
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-400 leading-relaxed text-sm md:text-base">
-                    {feature.description}
-                  </p>
+                      <h3
+                        className="text-xl font-bold text-white mb-3 transition-colors"
+                        style={{ fontFamily: "'Sora', sans-serif" }}
+                      >
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-400 leading-relaxed text-sm md:text-base group-hover:text-gray-300 transition-colors">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </TiltCard>
                 </motion.div>
               );
             })}
@@ -431,24 +483,25 @@ const AvaOryon = () => {
         </section>
 
         {/* ── TRUST STRIP ── */}
-        <section className="relative z-10 border-y border-white/5 bg-white/[0.02] py-8 overflow-hidden">
-          <div className="max-w-5xl mx-auto px-6 flex flex-wrap items-center justify-center gap-8 md:gap-16">
+        <section className="relative z-10 py-8 overflow-hidden">
+          <div className="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-center gap-4 md:gap-8 relative z-10">
             {[
-              { icon: Shield, label: "Login Criptografado" },
-              { icon: CheckCircle2, label: "Licença Validada em Tempo Real" },
-              { icon: Package, label: "Instalador Único (.exe)" },
-              { icon: History, label: "Histórico Salvo Localmente" },
-            ].map(({ icon: Icon, label }, i) => (
+              { icon: Lock, label: "Login Criptografado", color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20", glow: "hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]" },
+              { icon: CloudLightning, label: "Licença Validada em Tempo Real", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20", glow: "hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]" },
+              { icon: Cpu, label: "Instalador Único (.exe)", color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", glow: "hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]" },
+              { icon: Database, label: "Histórico Salvo Localmente", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20", glow: "hover:shadow-[0_0_20px_rgba(236,72,153,0.15)]" },
+            ].map(({ icon: Icon, label, color, bg, border, glow }, i) => (
               <motion.div
                 key={label}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="flex items-center gap-2.5 text-gray-400 text-sm"
+                transition={{ delay: i * 0.1, type: "spring", stiffness: 100 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                className={`flex items-center gap-3 px-5 py-2.5 rounded-full border ${border} ${bg} backdrop-blur-sm group cursor-default transition-all duration-300 ${glow}`}
               >
-                <Icon className="w-4 h-4 text-purple-400" />
-                {label}
+                <Icon className={`w-4 h-4 ${color} group-hover:scale-110 transition-transform`} />
+                <span className="text-gray-300 text-sm font-medium tracking-wide group-hover:text-white transition-colors">{label}</span>
               </motion.div>
             ))}
           </div>
@@ -504,33 +557,35 @@ const AvaOryon = () => {
         </section>
 
         {/* ── COMO FUNCIONA SECTION ── */}
-        <section className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+        <section className="relative z-10 max-w-5xl mx-auto px-6 py-24">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
             <span className="inline-block mb-4 text-xs uppercase tracking-[0.4em] text-gray-500 font-mono">
-              O Novo Fluxo
+              Workflow Oryon
             </span>
             <h2
               className="text-3xl md:text-5xl font-bold text-white mb-6"
               style={{ fontFamily: "'Sora', sans-serif" }}
             >
-              Como Funciona em{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                 3 Passos Rápidos
               </span>
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10">
+          <div className="relative flex flex-col md:flex-row gap-12 md:gap-6 justify-between items-start">
+            {/* Timeline Line (Desktop) */}
+            <div className="hidden md:block absolute top-[23px] left-0 w-full h-[2px] bg-gradient-to-r from-purple-500/0 via-purple-500/20 to-pink-500/0" />
+
             {[
-              { num: "01", title: "Assine", desc: "Escolha o plano que cabe no seu bolso (Estudante ou Agência)." },
-              { num: "02", title: "Acesse", desc: "Faça o download e logue no App com o e-mail da compra." },
-              { num: "03", title: "Dê o Play", desc: "Insira o RA/Senha da Unime e deixe o Oryon trabalhar por você." },
+              { num: "01", title: "Kick-off", desc: "Escolha seu plano (Estudante ou Agência) e receba sua Key instantaneamente no e-mail." },
+              { num: "02", title: "Setup", desc: "Baixe o Launcher, faça login com seu e-mail de compra e ative sua licença." },
+              { num: "03", title: "Automation", desc: "Dê o play. O robô assume o controle do portal enquanto você foca no que realmente importa." },
             ].map((step, i) => (
               <motion.div
                 key={step.num}
@@ -538,17 +593,24 @@ const AvaOryon = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.6 }}
-                className="relative rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center"
+                className="relative w-full md:w-1/3 flex flex-col items-center text-center group"
               >
-                <div className="w-12 h-12 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl font-bold mx-auto mb-6">
+                {/* Giant Number Background */}
+                <div className="absolute top-0 md:-top-16 left-1/2 -translate-x-1/2 text-[8rem] md:text-[10rem] font-black text-white/[0.03] select-none pointer-events-none group-hover:text-purple-500/[0.05] transition-colors duration-500" style={{ fontFamily: "'Sora', sans-serif" }}>
                   {step.num}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3" style={{ fontFamily: "'Sora', sans-serif" }}>
-                  {step.title}
-                </h3>
-                <p className="text-gray-400 text-sm md:text-base leading-relaxed">
-                  {step.desc}
-                </p>
+
+                <div className="relative z-10 w-12 h-12 rounded-full bg-[#0d1117] border-[2px] border-purple-500/30 text-purple-400 flex items-center justify-center text-lg font-bold mx-auto mb-8 group-hover:border-purple-400 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all duration-300">
+                  {step.num}
+                </div>
+                <div className="relative z-10 px-4">
+                  <h3 className="text-xl font-bold text-white mb-3" style={{ fontFamily: "'Sora', sans-serif" }}>
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm md:text-base leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -605,41 +667,43 @@ const AvaOryon = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-[#161B22] border border-white/10 rounded-3xl p-8 hover:border-purple-500/30 transition-all flex flex-col relative overflow-hidden"
+              className="h-full"
             >
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold text-white mb-2">Plano Estudante</h3>
-                <p className="text-gray-400 text-sm">Ideal para uso individual</p>
-              </div>
-              <div className="mb-8 flex items-end gap-2">
-                <span className="text-4xl font-bold text-white">R$ 29,90</span>
-                <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
-              </div>
-              <ul className="space-y-4 mb-10 flex-1">
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
-                  Limite de 1 RA <span className="text-gray-500 text-xs ml-1">(No primeiro acesso)</span>
-                </li>
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
-                  Automação Completa
-                </li>
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
-                  Dashboard e Countdown
-                </li>
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
-                  Suporte via Comunidade
-                </li>
-              </ul>
-              <button
-                onClick={() => handleCheckoutSubmit(1)}
-                disabled={checkoutLoading}
-                className="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-colors disabled:opacity-50"
-              >
-                {checkoutLoading ? "Processando..." : "Assinar Plano Estudante"}
-              </button>
+              <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] transition-all flex flex-col relative group h-full">
+                <div className="mb-8 pointer-events-none">
+                  <h3 className="text-2xl font-bold text-white mb-2">Plano Estudante</h3>
+                  <p className="text-gray-400 text-sm">Ideal para uso individual</p>
+                </div>
+                <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                  <span className="text-4xl font-bold text-white">R$ 29,90</span>
+                  <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
+                </div>
+                <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300" />
+                    Limite de 1 RA <span className="text-gray-500 text-xs ml-1">(No primeiro acesso)</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                    Automação Completa
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                    Dashboard e Countdown
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                    Suporte via Comunidade
+                  </li>
+                </ul>
+                <button
+                  onClick={() => handleCheckoutSubmit(1)}
+                  disabled={checkoutLoading}
+                  className="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-colors disabled:opacity-50 relative z-10"
+                >
+                  {checkoutLoading ? "Processando..." : "Assinar Plano Estudante"}
+                </button>
+              </TiltCard>
             </motion.div>
 
             {/* PLANO AGÊNCIA */}
@@ -648,59 +712,90 @@ const AvaOryon = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-[#161B22] border border-purple-500/50 shadow-[0_0_30px_rgba(139,92,246,0.15)] rounded-3xl p-8 relative flex flex-col"
+              className="h-full relative"
             >
-              <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
-                <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg">
-                  MELHOR CUSTO-BENEFÍCIO
-                </span>
-              </div>
+              <TiltCard className="bg-white/[0.04] backdrop-blur-xl border border-purple-500/40 shadow-[0_0_40px_rgba(139,92,246,0.15)] rounded-3xl p-8 relative flex flex-col hover:border-purple-500/60 transition-all group h-full">
+                <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
+                  <motion.span
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg"
+                  >
+                    MELHOR CUSTO-BENEFÍCIO
+                  </motion.span>
+                </div>
 
-              <div className="mb-8 mt-2">
-                <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">Plano Agência</h3>
-                <p className="text-gray-400 text-sm">Para quem presta serviço</p>
-              </div>
-              <div className="mb-8 flex items-end gap-2">
-                <span className="text-4xl font-bold text-white">R$ 59,90</span>
-                <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
-              </div>
-              <ul className="space-y-4 mb-10 flex-1">
-                <li className="flex items-center gap-3 text-white text-sm font-medium">
-                  <Zap className="w-5 h-5 text-pink-400 shrink-0 fill-pink-400/20" />
-                  Limite de 10 RAs <span className="text-gray-400 text-xs font-normal ml-1">(Na mesma chave)</span>
-                </li>
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
-                  Prioridade em Atualizações
-                </li>
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
-                  Suporte Direto (WhatsApp)
-                </li>
-                <li className="flex items-center gap-3 text-gray-300 text-sm">
-                  <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
-                  Painel de Gestão
-                </li>
-              </ul>
-              <button
-                onClick={() => handleCheckoutSubmit(10)}
-                disabled={checkoutLoading}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
-              >
-                {checkoutLoading ? "Processando..." : "Assinar Plano Agência"}
-              </button>
+                <div className="mb-8 mt-2 pointer-events-none">
+                  <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">Plano Agência</h3>
+                  <p className="text-gray-400 text-sm">Para quem presta serviço</p>
+                </div>
+                <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                  <span className="text-4xl font-bold text-white">R$ 59,90</span>
+                  <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
+                </div>
+                <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                  <li className="flex items-center gap-3 text-white text-sm font-medium">
+                    <Zap className="w-5 h-5 text-pink-400 shrink-0 fill-pink-400/20 group-hover:scale-125 transition-transform duration-300" />
+                    Limite de 10 RAs <span className="text-gray-400 text-xs font-normal ml-1">(Na mesma chave)</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                    Prioridade em Atualizações
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                    Suporte Direto (WhatsApp)
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                    Painel de Gestão
+                  </li>
+                </ul>
+                <button
+                  onClick={() => handleCheckoutSubmit(10)}
+                  disabled={checkoutLoading}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
+                >
+                  {checkoutLoading ? "Processando..." : "Assinar Plano Agência"}
+                </button>
+              </TiltCard>
             </motion.div>
           </div>
 
-          <div className="mt-14 text-center">
-            <a
-              href="https://wa.me/+5571991373142" // TODO: Add actual support link if needed
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm hover:underline underline-offset-4"
+          <div className="mt-14 max-w-2xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="h-full"
             >
-              Já tem uma licença e quer adicionar mais RAs? <span className="text-purple-400">[Clique aqui para Upgrade]</span>
-            </a>
+              <TiltCard className="rounded-xl border border-purple-500/20 bg-white/[0.02] backdrop-blur-xl p-8 md:p-10 text-center flex flex-col items-center justify-center relative overflow-hidden group shadow-lg">
+                <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <h3 className="relative z-10 text-2xl font-bold text-white mb-2 pointer-events-none" style={{ fontFamily: "'Sora', sans-serif" }}>
+                  <span className="text-yellow-400"></span> Sua operação cresceu?
+                </h3>
+                <p className="relative z-10 text-gray-400 text-sm md:text-base mb-8 pointer-events-none">
+                  Aumente seu limite de RAs agora e atenda mais alunos sem precisar de uma nova chave.
+                </p>
+
+                <a
+                  href="https://wa.me/+5511955821293" // Suporte number from footer
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative z-10 inline-flex items-center justify-center px-8 py-4 rounded-xl font-bold text-sm text-white overflow-hidden transition-all duration-300 transform group-hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] pointer-events-auto"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-xl bg-[length:200%_auto] animate-gradient" />
+                  <div className="absolute inset-[2px] bg-[#0d1117] rounded-[10px]" />
+                  <div className="absolute inset-[2px] bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                  <span className="relative z-10 flex items-center gap-2 group-hover:text-white text-gray-200 uppercase tracking-wider">
+                    <Zap className="w-5 h-5 text-purple-400 group-hover:text-white transition-colors" />
+                    Clique aqui para Upgrade
+                  </span>
+                </a>
+              </TiltCard>
+            </motion.div>
           </div>
         </section>
 
@@ -727,7 +822,7 @@ const AvaOryon = () => {
             </h2>
           </motion.div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] divide-y divide-white/0 px-6 md:px-8">
+          <div className="w-full">
             {faqs.map((faq, index) => (
               <FAQItem
                 key={faq.question}

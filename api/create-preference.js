@@ -1,4 +1,25 @@
+// Mapa em memória para Rate Limiting Rudimentar (Mitigação Anti-Spam de Requisições)
+const rateLimitMap = new Map();
+
 export default async function handler(req, res) {
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+  const now = Date.now();
+  
+  // Rate Limiter: Máximo de 15 requisições por IP a cada 60 segundos
+  if (rateLimitMap.has(ip)) {
+    const data = rateLimitMap.get(ip);
+    if (now - data.time < 60000) { 
+      if (data.count > 15) {
+        return res.status(429).json({ error: 'Muitas requisições. Rate Limit Excedido (Proteção Anti-Spam Ativa).' });
+      }
+      data.count++;
+      rateLimitMap.set(ip, data);
+    } else {
+      rateLimitMap.set(ip, { count: 1, time: now });
+    }
+  } else {
+    rateLimitMap.set(ip, { count: 1, time: now });
+  }
   // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader('Access-Control-Allow-Origin', '*') // substitua pelo seu domínio se quiser mais segurança
@@ -22,8 +43,13 @@ export default async function handler(req, res) {
   try {
     const { email, ra_limit } = req.body;
 
-    if (!email || !email.includes('@')) {
-      return res.status(400).json({ error: 'E-mail inválido ou não fornecido.' });
+    // Sanitização e Regex Fortificado (Prevenção de XSS/SQLi via string de e-mail)
+    const cleanEmail = email ? email.trim().toLowerCase() : "";
+    const emailRegex = /^[^\s@<>'"()\[\]]+@[^\s@<>'"()\[\]]+\.[^\s@<>'"()\[\]]{2,}$/;
+
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+      console.warn("Segurança: Carga injetável barrada no e-mail", email);
+      return res.status(400).json({ error: 'E-mail inválido ou tentativa de injeção bloqueada.' });
     }
 
     // Definir valores baseados no ra_limit
@@ -36,8 +62,13 @@ export default async function handler(req, res) {
       planPrice = 59.90;
     } // default para 1 (Estudante)
 
-    // Token do Mercado Pago fornecido pelo usuário
-    const ACCESS_TOKEN = 'APP_USR-7626769308027334-032719-96958d6949994474159460a9c8b4f29c-2244840287';
+    // Token do Mercado Pago lido com segurança das Variáveis de Ambiente
+    const ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
+    
+    if (!ACCESS_TOKEN) {
+      console.error("FALHA CRÍTICA: MP_ACCESS_TOKEN não está configurado nas variáveis de ambiente da Vercel.");
+      return res.status(500).json({ error: "Erro de Configuração do Checkout." });
+    }
 
     // Montando o Payload para o Mercado Pago
     const preferenceData = {
@@ -50,10 +81,10 @@ export default async function handler(req, res) {
         }
       ],
       payer: {
-        email: email
+        email: cleanEmail
       },
       metadata: {
-        email: email, // O LUGAR SEGURO ONDE O WEBHOOK VAI LER DEPOIS (LGPD Bypass)
+        email: cleanEmail, // O LUGAR SEGURO ONDE O WEBHOOK VAI LER DEPOIS (LGPD Bypass)
         ra_limit: limit
       },
       statement_descriptor: "Studio Oryon", // Muda a fatura do Cartão de Crédito

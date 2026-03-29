@@ -152,12 +152,12 @@ const Footer = () => {
                <p className="text-gray-500 text-sm">
                 © {currentYear} Studio Oryon. Todos os direitos reservados.
               </p>
-               {/* Optional Navigation Links */}
+               {/* Navigation Links */}
                <nav className="flex gap-6 text-sm text-gray-400">
-                  <a href="#home" className="hover:text-white transition-colors">Home</a>
-                  <a href="#tech" className="hover:text-white transition-colors">Stack</a>
-                  <a href="#projects" className="hover:text-white transition-colors">Projects</a>
-                  <a href="#about" className="hover:text-white transition-colors">About</a>
+                  <a href="https://studiooryon.pro/" className="hover:text-white transition-colors">Home</a>
+                  <a href="https://studiooryon.pro/ava-oryon" className="hover:text-white transition-colors">Oryon App</a>
+                  <a href="https://wa.me/5511955821293" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Suporte</a>
+                  <a href="https://studiooryon.pro/#sobre" className="hover:text-white transition-colors">Sobre</a>
                </nav>
             </div>
 
