@@ -186,7 +186,7 @@ const Header = () => {
           {/* Right Actions */}
           <div className="hidden md:flex items-center gap-4">
             <a 
-              href="https://wa.me/5511955821293?text=Olá%20Studio%20Oryon!%20Vim%20através%20do%20seu%20site."  
+              href="https://wa.me/5571991373142?text=olá,%20quero%20adquirir%20a%20licença"  
               target="_blank" 
               rel="noopener noreferrer"
               className="cursor-target bg-white text-black font-bold rounded-full px-6 py-2 hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center gap-2 group text-sm"
@@ -302,7 +302,7 @@ const Header = () => {
                   className="flex flex-col items-center gap-8 w-full"
                 >
                   <a 
-                    href="https://wa.me/5511955821293?text=Olá%20Studio%20Oryon!%20Vim%20através%20do%20seu%20site." 
+                    href="https://wa.me/5571991373142?text=olá,%20quero%20adquirir%20a%20licença" 
                     target="_blank" 
                     rel="noreferrer"
                     className="w-full max-w-xs py-4 bg-white text-black font-bold text-lg rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.15)]"

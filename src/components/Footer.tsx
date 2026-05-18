@@ -101,7 +101,7 @@ const Footer = () => {
               <div className="flex flex-wrap items-center gap-4">
                   <Magnetic>
                     <a 
-                        href="https://wa.me/5511955821293?text=Olá%20Studio%20Oryon!%20Gostaria%20de%20iniciar%20um%20projeto."
+                        href="https://wa.me/5571991373142?text=olá,%20quero%20adquirir%20a%20licença"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group relative px-8 py-4 bg-white text-black rounded-full font-bold text-lg overflow-hidden flex items-center gap-2 transition-transform hover:scale-105"
@@ -132,7 +132,7 @@ const Footer = () => {
                 <div className="text-left md:text-right space-y-4">
                     <h3 className="text-gray-400 uppercase tracking-widest text-sm font-semibold">Contato</h3>
                     <a href="mailto:devwesleysc@gmail.com" className="block text-2xl text-white font-light hover:text-gray-300 transition-colors">devwesleysc@gmail.com</a>
-                    <a href="https://wa.me/5511955821293" target="_blank" rel="noopener noreferrer" className="block text-2xl text-white font-light hover:text-[#25D366] transition-colors">+55 (11) 95582-1293</a>
+                    <a href="https://wa.me/5571991373142" target="_blank" rel="noopener noreferrer" className="block text-2xl text-white font-light hover:text-[#25D366] transition-colors">+55 (71) 99137-3142</a>
                 </div>
                 
                 <div className="text-left md:text-right space-y-4">
@@ -156,7 +156,7 @@ const Footer = () => {
                <nav className="flex gap-6 text-sm text-gray-400">
                   <a href="https://studiooryon.pro/" className="hover:text-white transition-colors">Home</a>
                   <a href="https://studiooryon.pro/ava-oryon" className="hover:text-white transition-colors">Oryon App</a>
-                  <a href="https://wa.me/5511955821293" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Suporte</a>
+                  <a href="https://wa.me/5571991373142" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Suporte</a>
                   <a href="https://studiooryon.pro/#sobre" className="hover:text-white transition-colors">Sobre</a>
                </nav>
             </div>

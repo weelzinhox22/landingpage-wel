@@ -9,8 +9,8 @@ const contactMethods = [
   {
     icon: Phone,
     label: "WhatsApp",
-    value: "+55 11 95582-1293",
-    href: "https://wa.me/5511955821293?text=Olá%20Studio%20Oryon!%20Vim%20através%20do%20seu%20portfólio%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto.",
+    value: "+55 71 99137-3142",
+    href: "https://wa.me/5571991373142?text=olá,%20quero%20adquirir%20a%20licença",
     description: "Resposta rápida",
   },
   {
@@ -194,7 +194,7 @@ const ContactSection = () => {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a 
-                  href="https://wa.me/5511955821293?text=Olá%20Studio%20Oryon!%20Vim%20através%20do%20seu%20portfólio%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto."
+                  href="https://wa.me/5571991373142?text=olá,%20quero%20adquirir%20a%20licença"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-3 px-10 py-5 bg-white text-black font-bold text-base rounded-full hover:bg-primary hover:text-white dark:hover:text-white transition-all duration-300 uppercase tracking-wider shadow-xl hover:shadow-2xl hover:scale-105 w-full sm:w-auto justify-center"

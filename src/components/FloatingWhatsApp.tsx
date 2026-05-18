@@ -24,7 +24,7 @@ const FloatingWhatsApp = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.a
-          href="https://wa.me/5511955821293?text=Olá%20Studio%20Oryon!%20Vim%20através%20do%20seu%20site."
+          href="https://wa.me/5571991373142?text=olá,%20quero%20adquirir%20a%20licença"
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-8 right-8 z-[60] flex items-center justify-center group"

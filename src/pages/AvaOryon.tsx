@@ -86,11 +86,11 @@ const faqs = [
   },
   {
     question: "O pagamento é único?",
-    answer: "O acesso é semestral, acompanhando o ciclo do AVA da faculdade.",
+    answer: "O acesso é trimestral.",
   },
   {
     question: "Como recebo minha chave de licença?",
-    answer: "Após a confirmação do pagamento via Mercado Pago, você receberá sua chave por e-mail, e ela será vinculada ao seu e-mail da compra.",
+    answer: "Após a confirmação do pagamento via WhatsApp, você receberá sua chave por e-mail, e ela será vinculada ao seu e-mail da compra.",
   },
 ];
 
@@ -116,30 +116,27 @@ const FAQItem = ({
       transition={{ delay: index * 0.1, duration: 0.5 }}
       className="mb-4 last:mb-0 group/faq cursor-pointer"
     >
-      <div 
-        className={`border rounded-xl overflow-hidden backdrop-blur-xl transition-all duration-300 ${
-          isOpen 
-            ? 'bg-white/[0.04] border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.1)]' 
+      <div
+        className={`border rounded-xl overflow-hidden backdrop-blur-xl transition-all duration-300 ${isOpen
+            ? 'bg-white/[0.04] border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.1)]'
             : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.03] hover:border-purple-500/20 hover:shadow-[0_0_20px_rgba(168,85,247,0.05)]'
-        }`}
+          }`}
       >
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-full flex items-center justify-between p-6 text-left gap-4 group"
         >
-          <span 
-            className={`font-bold text-base transition-colors duration-300 ${
-              isOpen ? 'text-purple-300' : 'text-white group-hover:text-purple-200'
-            }`}
+          <span
+            className={`font-bold text-base transition-colors duration-300 ${isOpen ? 'text-purple-300' : 'text-white group-hover:text-purple-200'
+              }`}
           >
             {question}
           </span>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-300 ${
-              isOpen ? 'bg-purple-500/20 text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.2)]' : 'bg-white/5 text-gray-500 group-hover:bg-purple-500/10 group-hover:text-purple-300'
-            }`}
+            className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-300 ${isOpen ? 'bg-purple-500/20 text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.2)]' : 'bg-white/5 text-gray-500 group-hover:bg-purple-500/10 group-hover:text-purple-300'
+              }`}
           >
             <ChevronDown className="w-5 h-5" />
           </motion.div>
@@ -219,7 +216,7 @@ const AvaOryon = () => {
     const emailRegex = /^[^\s@<>'\"()\[\]]+@[^\s@<>'\"()\[\]]+\.[^\s@<>'\"()\[\]]{2,}$/;
 
     if (!cleanEmail || !emailRegex.test(cleanEmail)) {
-      setCheckoutError("Por favor, insira um e-mail válido e seguro antes de faturar.");
+      setCheckoutError("Por favor, insira um e-mail válido e seguro antes de prosseguir.");
       return;
     }
 
@@ -227,28 +224,15 @@ const AvaOryon = () => {
     setCheckoutError("");
 
     try {
-      const apiUrl = import.meta.env.VITE_MP_PREFERENCE_URL || "/api/create-preference";
+      const planName = limit === 1 ? "Estudante" : "Agência";
+      const message = `olá, quero adquirir a licença do Plano ${planName}. Meu e-mail é: ${cleanEmail}`;
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/5571991373142?text=${encodedMessage}`;
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: cleanEmail, ra_limit: limit }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro ao gerar link de pagamento.");
-      }
-
-      const data = await response.json();
-
-      if (data.init_point) {
-        window.location.href = data.init_point;
-      } else {
-        throw new Error("Link (init_point) não retornado pela API.");
-      }
+      window.open(whatsappUrl, "_blank");
     } catch (err) {
       console.error(err);
-      setCheckoutError("Não foi possível gerar a cobrança agora.");
+      setCheckoutError("Não foi possível redirecionar para o WhatsApp.");
     } finally {
       setCheckoutLoading(false);
     }
@@ -367,7 +351,7 @@ const AvaOryon = () => {
                 {/* Secondary — info */}
                 <p className="text-gray-500 text-sm flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
-                  Pagamento seguro via Mercado Pago
+                  Pagamento seguro via WhatsApp
                 </p>
               </div>
             </motion.div>
@@ -551,7 +535,7 @@ const AvaOryon = () => {
             </button>
 
             <p className="mt-5 text-gray-600 text-sm">
-              Pagamento via Mercado Pago · Confirmação imediata
+              Pagamento via WhatsApp · Ativação imediata
             </p>
           </motion.div>
         </section>
@@ -675,7 +659,7 @@ const AvaOryon = () => {
                   <p className="text-gray-400 text-sm">Ideal para uso individual</p>
                 </div>
                 <div className="mb-8 flex items-end gap-2 pointer-events-none">
-                  <span className="text-4xl font-bold text-white">R$ 29,90</span>
+                  <span className="text-4xl font-bold text-white">R$ 49,90</span>
                   <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
                 </div>
                 <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
@@ -730,7 +714,7 @@ const AvaOryon = () => {
                   <p className="text-gray-400 text-sm">Para quem presta serviço</p>
                 </div>
                 <div className="mb-8 flex items-end gap-2 pointer-events-none">
-                  <span className="text-4xl font-bold text-white">R$ 59,90</span>
+                  <span className="text-4xl font-bold text-white">R$ 99,90</span>
                   <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
                 </div>
                 <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
@@ -780,7 +764,7 @@ const AvaOryon = () => {
                 </p>
 
                 <a
-                  href="https://wa.me/+5511955821293" // Suporte number from footer
+                  href="https://wa.me/5571991373142?text=olá,%20quero%20adquirir%20a%20licença%20(Upgrade)"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative z-10 inline-flex items-center justify-center px-8 py-4 rounded-xl font-bold text-sm text-white overflow-hidden transition-all duration-300 transform group-hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] pointer-events-auto"

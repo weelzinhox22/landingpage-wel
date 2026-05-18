@@ -59,7 +59,7 @@ const CTASection = () => {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
               <a 
-                href="https://wa.me/5511955821293?text=Olá%20Studio%20Oryon!%20Vim%20através%20do%20seu%20portfólio%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto."
+                href="https://wa.me/5571991373142?text=olá,%20quero%20adquirir%20a%20licença"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center gap-3 px-10 py-5 bg-primary text-white dark:text-white font-bold text-base rounded-full hover:bg-primary/90 hover:scale-105 transition-all duration-300 uppercase tracking-wider shadow-2xl w-full sm:w-auto justify-center"
