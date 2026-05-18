@@ -211,7 +211,7 @@ const AvaOryon = () => {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
 
-  const handleCheckoutSubmit = async (limit: number) => {
+  const handleCheckoutSubmit = async (planName: string) => {
     const cleanEmail = checkoutEmail ? checkoutEmail.trim().toLowerCase() : "";
     const emailRegex = /^[^\s@<>'\"()\[\]]+@[^\s@<>'\"()\[\]]+\.[^\s@<>'\"()\[\]]{2,}$/;
 
@@ -224,7 +224,6 @@ const AvaOryon = () => {
     setCheckoutError("");
 
     try {
-      const planName = limit === 1 ? "Estudante" : "Agência";
       const message = `olá, quero adquirir a licença do Plano ${planName}. Meu e-mail é: ${cleanEmail}`;
       const encodedMessage = encodeURIComponent(message);
       const whatsappUrl = `https://wa.me/5571991373142?text=${encodedMessage}`;
@@ -644,23 +643,23 @@ const AvaOryon = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* PLANO ESTUDANTE */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* PLANO MENSAL */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="h-full"
             >
               <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] transition-all flex flex-col relative group h-full">
                 <div className="mb-8 pointer-events-none">
-                  <h3 className="text-2xl font-bold text-white mb-2">Plano Estudante</h3>
-                  <p className="text-gray-400 text-sm">Ideal para uso individual</p>
+                  <h3 className="text-2xl font-bold text-white mb-2">Plano Mensal</h3>
+                  <p className="text-gray-400 text-sm">Acesso de curto prazo</p>
                 </div>
                 <div className="mb-8 flex items-end gap-2 pointer-events-none">
-                  <span className="text-4xl font-bold text-white">R$ 49,90</span>
-                  <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
+                  <span className="text-4xl font-bold text-white">R$ 39,90</span>
+                  <span className="text-gray-500 text-sm pb-1">/ mês</span>
                 </div>
                 <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
                   <li className="flex items-center gap-3 text-gray-300 text-sm">
@@ -681,19 +680,19 @@ const AvaOryon = () => {
                   </li>
                 </ul>
                 <button
-                  onClick={() => handleCheckoutSubmit(1)}
+                  onClick={() => handleCheckoutSubmit("Mensal")}
                   disabled={checkoutLoading}
                   className="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-colors disabled:opacity-50 relative z-10"
                 >
-                  {checkoutLoading ? "Processando..." : "Assinar Plano Estudante"}
+                  {checkoutLoading ? "Processando..." : "Assinar Plano Mensal"}
                 </button>
               </TiltCard>
             </motion.div>
 
-            {/* PLANO AGÊNCIA */}
+            {/* PLANO TRIMESTRAL */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="h-full relative"
@@ -710,37 +709,90 @@ const AvaOryon = () => {
                 </div>
 
                 <div className="mb-8 mt-2 pointer-events-none">
-                  <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">Plano Agência</h3>
-                  <p className="text-gray-400 text-sm">Para quem presta serviço</p>
+                  <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">Plano Trimestral</h3>
+                  <p className="text-gray-400 text-sm">Ideal para o semestre letivo</p>
                 </div>
                 <div className="mb-8 flex items-end gap-2 pointer-events-none">
-                  <span className="text-4xl font-bold text-white">R$ 99,90</span>
+                  <span className="text-4xl font-bold text-white">R$ 55,90</span>
                   <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
                 </div>
                 <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
                   <li className="flex items-center gap-3 text-white text-sm font-medium">
                     <Zap className="w-5 h-5 text-pink-400 shrink-0 fill-pink-400/20 group-hover:scale-125 transition-transform duration-300" />
-                    Limite de 10 RAs <span className="text-gray-400 text-xs font-normal ml-1">(Na mesma chave)</span>
+                    Limite de 1 RA <span className="text-gray-400 text-xs font-normal ml-1">(No primeiro acesso)</span>
                   </li>
                   <li className="flex items-center gap-3 text-gray-300 text-sm">
                     <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
-                    Prioridade em Atualizações
+                    Automação Completa
                   </li>
                   <li className="flex items-center gap-3 text-gray-300 text-sm">
                     <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
-                    Suporte Direto (WhatsApp)
+                    Dashboard e Countdown
                   </li>
                   <li className="flex items-center gap-3 text-gray-300 text-sm">
                     <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
-                    Painel de Gestão
+                    Prioridade em Atualizações
                   </li>
                 </ul>
                 <button
-                  onClick={() => handleCheckoutSubmit(10)}
+                  onClick={() => handleCheckoutSubmit("Trimestral")}
                   disabled={checkoutLoading}
                   className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
                 >
-                  {checkoutLoading ? "Processando..." : "Assinar Plano Agência"}
+                  {checkoutLoading ? "Processando..." : "Assinar Plano Trimestral"}
+                </button>
+              </TiltCard>
+            </motion.div>
+
+            {/* PLANO VITALÍCIO */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="h-full relative"
+            >
+              <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-pink-500/30 rounded-3xl p-8 hover:border-pink-500/50 hover:shadow-[0_0_30px_rgba(236,72,153,0.15)] transition-all flex flex-col relative group h-full">
+                <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
+                  <motion.span
+                    className="bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg"
+                  >
+                    SEM RENOVAÇÃO
+                  </motion.span>
+                </div>
+
+                <div className="mb-8 mt-2 pointer-events-none">
+                  <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-yellow-400 mb-2">Plano Vitalício</h3>
+                  <p className="text-gray-400 text-sm">Pague uma vez, use para sempre</p>
+                </div>
+                <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                  <span className="text-4xl font-bold text-white">R$ 129,90</span>
+                  <span className="text-gray-500 text-sm pb-1">/ único</span>
+                </div>
+                <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                  <li className="flex items-center gap-3 text-white text-sm font-medium">
+                    <Zap className="w-5 h-5 text-yellow-400 shrink-0 fill-yellow-400/20 group-hover:scale-125 transition-transform duration-300" />
+                    Limite de 1 RA <span className="text-gray-400 text-xs font-normal ml-1">(No primeiro acesso)</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                    Automação Completa Vitalícia
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                    Acesso Ilimitado sem Mensalidades
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-300 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                    Suporte VIP Prioritário
+                  </li>
+                </ul>
+                <button
+                  onClick={() => handleCheckoutSubmit("Vitalício")}
+                  disabled={checkoutLoading}
+                  className="w-full py-4 rounded-xl border border-pink-500/20 bg-pink-500/10 text-white font-bold hover:bg-pink-500/20 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
+                >
+                  {checkoutLoading ? "Processando..." : "Adquirir Plano Vitalício"}
                 </button>
               </TiltCard>
             </motion.div>
