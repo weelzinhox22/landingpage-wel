@@ -22,6 +22,8 @@ import {
   CloudLightning,
   Cpu,
   Database,
+  User,
+  Briefcase,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -210,6 +212,7 @@ const AvaOryon = () => {
   const [checkoutEmail, setCheckoutEmail] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
+  const [pricingTab, setPricingTab] = useState<"individual" | "agency">("individual");
 
   const handleCheckoutSubmit = async (planName: string) => {
     const cleanEmail = checkoutEmail ? checkoutEmail.trim().toLowerCase() : "";
@@ -643,160 +646,321 @@ const AvaOryon = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* PLANO MENSAL */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="h-full"
-            >
-              <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] transition-all flex flex-col relative group h-full">
-                <div className="mb-8 pointer-events-none">
-                  <h3 className="text-2xl font-bold text-white mb-2">Plano Mensal</h3>
-                  <p className="text-gray-400 text-sm">Acesso de curto prazo</p>
-                </div>
-                <div className="mb-8 flex items-end gap-2 pointer-events-none">
-                  <span className="text-4xl font-bold text-white">R$ 39,90</span>
-                  <span className="text-gray-500 text-sm pb-1">/ mês</span>
-                </div>
-                <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300" />
-                    Limite de 1 RA <span className="text-gray-500 text-xs ml-1">(No primeiro acesso)</span>
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
-                    Automação Completa
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
-                    Dashboard e Countdown
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
-                    Suporte via Comunidade
-                  </li>
-                </ul>
-                <button
-                  onClick={() => handleCheckoutSubmit("Mensal")}
-                  disabled={checkoutLoading}
-                  className="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-colors disabled:opacity-50 relative z-10"
-                >
-                  {checkoutLoading ? "Processando..." : "Assinar Plano Mensal"}
-                </button>
-              </TiltCard>
-            </motion.div>
-
-            {/* PLANO TRIMESTRAL */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="h-full relative"
-            >
-              <TiltCard className="bg-white/[0.04] backdrop-blur-xl border border-purple-500/40 shadow-[0_0_40px_rgba(139,92,246,0.15)] rounded-3xl p-8 relative flex flex-col hover:border-purple-500/60 transition-all group h-full">
-                <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
-                  <motion.span
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg"
-                  >
-                    MELHOR CUSTO-BENEFÍCIO
-                  </motion.span>
-                </div>
-
-                <div className="mb-8 mt-2 pointer-events-none">
-                  <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">Plano Trimestral</h3>
-                  <p className="text-gray-400 text-sm">Ideal para o semestre letivo</p>
-                </div>
-                <div className="mb-8 flex items-end gap-2 pointer-events-none">
-                  <span className="text-4xl font-bold text-white">R$ 55,90</span>
-                  <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
-                </div>
-                <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
-                  <li className="flex items-center gap-3 text-white text-sm font-medium">
-                    <Zap className="w-5 h-5 text-pink-400 shrink-0 fill-pink-400/20 group-hover:scale-125 transition-transform duration-300" />
-                    Limite de 1 RA <span className="text-gray-400 text-xs font-normal ml-1">(No primeiro acesso)</span>
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
-                    Automação Completa
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
-                    Dashboard e Countdown
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
-                    Prioridade em Atualizações
-                  </li>
-                </ul>
-                <button
-                  onClick={() => handleCheckoutSubmit("Trimestral")}
-                  disabled={checkoutLoading}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
-                >
-                  {checkoutLoading ? "Processando..." : "Assinar Plano Trimestral"}
-                </button>
-              </TiltCard>
-            </motion.div>
-
-            {/* PLANO VITALÍCIO */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="h-full relative"
-            >
-              <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-pink-500/30 rounded-3xl p-8 hover:border-pink-500/50 hover:shadow-[0_0_30px_rgba(236,72,153,0.15)] transition-all flex flex-col relative group h-full">
-                <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
-                  <motion.span
-                    className="bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg"
-                  >
-                    SEM RENOVAÇÃO
-                  </motion.span>
-                </div>
-
-                <div className="mb-8 mt-2 pointer-events-none">
-                  <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-yellow-400 mb-2">Plano Vitalício</h3>
-                  <p className="text-gray-400 text-sm">Pague uma vez, use para sempre</p>
-                </div>
-                <div className="mb-8 flex items-end gap-2 pointer-events-none">
-                  <span className="text-4xl font-bold text-white">R$ 129,90</span>
-                  <span className="text-gray-500 text-sm pb-1">/ único</span>
-                </div>
-                <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
-                  <li className="flex items-center gap-3 text-white text-sm font-medium">
-                    <Zap className="w-5 h-5 text-yellow-400 shrink-0 fill-yellow-400/20 group-hover:scale-125 transition-transform duration-300" />
-                    Limite de 1 RA <span className="text-gray-400 text-xs font-normal ml-1">(No primeiro acesso)</span>
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
-                    Automação Completa Vitalícia
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
-                    Acesso Ilimitado sem Mensalidades
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
-                    Suporte VIP Prioritário
-                  </li>
-                </ul>
-                <button
-                  onClick={() => handleCheckoutSubmit("Vitalício")}
-                  disabled={checkoutLoading}
-                  className="w-full py-4 rounded-xl border border-pink-500/20 bg-pink-500/10 text-white font-bold hover:bg-pink-500/20 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
-                >
-                  {checkoutLoading ? "Processando..." : "Adquirir Plano Vitalício"}
-                </button>
-              </TiltCard>
-            </motion.div>
+          {/* Pricing Tabs Selector */}
+          <div className="flex justify-center mb-12">
+            <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-1.5 rounded-2xl flex gap-2 relative">
+              <button
+                onClick={() => setPricingTab("individual")}
+                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 relative z-10 flex items-center gap-2 ${
+                  pricingTab === "individual"
+                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/35"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <User className="w-4 h-4" />
+                Uso Individual
+              </button>
+              <button
+                onClick={() => setPricingTab("agency")}
+                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 relative z-10 flex items-center gap-2 ${
+                  pricingTab === "agency"
+                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/35"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <Briefcase className="w-4 h-4" />
+                Planos Agência
+              </button>
+            </div>
           </div>
+
+          <AnimatePresence mode="wait">
+            {pricingTab === "individual" ? (
+              <motion.div
+                key="individual"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto w-full"
+              >
+                {/* PLANO MENSAL */}
+                <div className="h-full">
+                  <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] transition-all flex flex-col relative group h-full">
+                    <div className="mb-8 pointer-events-none">
+                      <h3 className="text-2xl font-bold text-white mb-2">Plano Mensal</h3>
+                      <p className="text-gray-400 text-sm">Acesso de curto prazo</p>
+                    </div>
+                    <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                      <span className="text-4xl font-bold text-white">R$ 39,90</span>
+                      <span className="text-gray-500 text-sm pb-1">/ mês</span>
+                    </div>
+                    <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300" />
+                        Limite de 1 RA <span className="text-gray-500 text-xs ml-1">(No primeiro acesso)</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                        Automação Completa
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                        Dashboard e Countdown
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                        Suporte via Comunidade
+                      </li>
+                    </ul>
+                    <button
+                      onClick={() => handleCheckoutSubmit("Individual Mensal")}
+                      disabled={checkoutLoading}
+                      className="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-colors disabled:opacity-50 relative z-10"
+                    >
+                      {checkoutLoading ? "Processando..." : "Assinar Plano Mensal"}
+                    </button>
+                  </TiltCard>
+                </div>
+
+                {/* PLANO TRIMESTRAL */}
+                <div className="h-full relative">
+                  <TiltCard className="bg-white/[0.04] backdrop-blur-xl border border-purple-500/40 shadow-[0_0_40px_rgba(139,92,246,0.15)] rounded-3xl p-8 relative flex flex-col hover:border-purple-500/60 transition-all group h-full">
+                    <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
+                      <motion.span
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg"
+                      >
+                        MELHOR CUSTO-BENEFÍCIO
+                      </motion.span>
+                    </div>
+
+                    <div className="mb-8 mt-2 pointer-events-none">
+                      <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">Plano Trimestral</h3>
+                      <p className="text-gray-400 text-sm">Ideal para o semestre letivo</p>
+                    </div>
+                    <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                      <span className="text-4xl font-bold text-white">R$ 55,90</span>
+                      <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
+                    </div>
+                    <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                      <li className="flex items-center gap-3 text-white text-sm font-medium">
+                        <Zap className="w-5 h-5 text-pink-400 shrink-0 fill-pink-400/20 group-hover:scale-125 transition-transform duration-300" />
+                        Limite de 1 RA <span className="text-gray-400 text-xs font-normal ml-1">(No primeiro acesso)</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                        Automação Completa
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                        Dashboard e Countdown
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                        Prioridade em Atualizações
+                      </li>
+                    </ul>
+                    <button
+                      onClick={() => handleCheckoutSubmit("Individual Trimestral")}
+                      disabled={checkoutLoading}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
+                    >
+                      {checkoutLoading ? "Processando..." : "Assinar Plano Trimestral"}
+                    </button>
+                  </TiltCard>
+                </div>
+
+                {/* PLANO VITALÍCIO */}
+                <div className="h-full relative">
+                  <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-pink-500/30 rounded-3xl p-8 hover:border-pink-500/50 hover:shadow-[0_0_30px_rgba(236,72,153,0.15)] transition-all flex flex-col relative group h-full">
+                    <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
+                      <span className="bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg">
+                        SEM RENOVAÇÃO
+                      </span>
+                    </div>
+
+                    <div className="mb-8 mt-2 pointer-events-none">
+                      <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-yellow-400 mb-2">Plano Vitalício</h3>
+                      <p className="text-gray-400 text-sm">Pague uma vez, use para sempre</p>
+                    </div>
+                    <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                      <span className="text-4xl font-bold text-white">R$ 129,90</span>
+                      <span className="text-gray-500 text-sm pb-1">/ único</span>
+                    </div>
+                    <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                      <li className="flex items-center gap-3 text-white text-sm font-medium">
+                        <Zap className="w-5 h-5 text-yellow-400 shrink-0 fill-yellow-400/20 group-hover:scale-125 transition-transform duration-300" />
+                        Limite de 1 RA <span className="text-gray-400 text-xs font-normal ml-1">(No primeiro acesso)</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                        Automação Completa Vitalícia
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                        Acesso Ilimitado sem Mensalidades
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                        Suporte VIP Prioritário
+                      </li>
+                    </ul>
+                    <button
+                      onClick={() => handleCheckoutSubmit("Individual Vitalício")}
+                      disabled={checkoutLoading}
+                      className="w-full py-4 rounded-xl border border-pink-500/20 bg-pink-500/10 text-white font-bold hover:bg-pink-500/20 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
+                    >
+                      {checkoutLoading ? "Processando..." : "Adquirir Plano Vitalício"}
+                    </button>
+                  </TiltCard>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="agency"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto w-full"
+              >
+                {/* PLANO MENSAL AGÊNCIA */}
+                <div className="h-full">
+                  <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] transition-all flex flex-col relative group h-full">
+                    <div className="mb-8 pointer-events-none">
+                      <h3 className="text-2xl font-bold text-white mb-2">Mensal Agência</h3>
+                      <p className="text-gray-400 text-sm">Acesso recorrente para times</p>
+                    </div>
+                    <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                      <span className="text-4xl font-bold text-white">R$ 69,90</span>
+                      <span className="text-gray-500 text-sm pb-1">/ mês</span>
+                    </div>
+                    <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300" />
+                        Limite de 10 RAs <span className="text-gray-500 text-xs ml-1">(Na mesma chave)</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                        Automação Completa
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                        Dashboard e Countdown
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                        Suporte Direto (WhatsApp)
+                      </li>
+                    </ul>
+                    <button
+                      onClick={() => handleCheckoutSubmit("Agência Mensal")}
+                      disabled={checkoutLoading}
+                      className="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-colors disabled:opacity-50 relative z-10"
+                    >
+                      {checkoutLoading ? "Processando..." : "Assinar Mensal Agência"}
+                    </button>
+                  </TiltCard>
+                </div>
+
+                {/* PLANO TRIMESTRAL AGÊNCIA */}
+                <div className="h-full relative">
+                  <TiltCard className="bg-white/[0.04] backdrop-blur-xl border border-purple-500/40 shadow-[0_0_40px_rgba(139,92,246,0.15)] rounded-3xl p-8 relative flex flex-col hover:border-purple-500/60 transition-all group h-full">
+                    <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
+                      <motion.span
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg"
+                      >
+                        MELHOR CUSTO-BENEFÍCIO
+                      </motion.span>
+                    </div>
+
+                    <div className="mb-8 mt-2 pointer-events-none">
+                      <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">Trimestral Agência</h3>
+                      <p className="text-gray-400 text-sm">Ideal para times e múltiplos RAs</p>
+                    </div>
+                    <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                      <span className="text-4xl font-bold text-white">R$ 99,90</span>
+                      <span className="text-gray-500 text-sm pb-1">/ trimestre</span>
+                    </div>
+                    <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                      <li className="flex items-center gap-3 text-white text-sm font-medium">
+                        <Zap className="w-5 h-5 text-pink-400 shrink-0 fill-pink-400/20 group-hover:scale-125 transition-transform duration-300" />
+                        Limite de 10 RAs <span className="text-gray-400 text-xs font-normal ml-1">(Na mesma chave)</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                        Automação Completa
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                        Dashboard e Countdown
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                        Suporte Direto (WhatsApp)
+                      </li>
+                    </ul>
+                    <button
+                      onClick={() => handleCheckoutSubmit("Agência Trimestral")}
+                      disabled={checkoutLoading}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
+                    >
+                      {checkoutLoading ? "Processando..." : "Assinar Trimestral Agência"}
+                    </button>
+                  </TiltCard>
+                </div>
+
+                {/* PLANO VITALÍCIO AGÊNCIA */}
+                <div className="h-full relative">
+                  <TiltCard className="bg-white/[0.02] backdrop-blur-xl border border-pink-500/30 rounded-3xl p-8 hover:border-pink-500/50 hover:shadow-[0_0_30px_rgba(236,72,153,0.15)] transition-all flex flex-col relative group h-full">
+                    <div className="absolute top-0 inset-x-0 flex justify-center -translate-y-1/2">
+                      <span className="bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg">
+                        SEM RENOVAÇÃO / COMPLETO
+                      </span>
+                    </div>
+
+                    <div className="mb-8 mt-2 pointer-events-none">
+                      <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-yellow-400 mb-2">Vitalício Agência</h3>
+                      <p className="text-gray-400 text-sm">Pague uma vez, use para sempre</p>
+                    </div>
+                    <div className="mb-8 flex items-end gap-2 pointer-events-none">
+                      <span className="text-4xl font-bold text-white">R$ 229,90</span>
+                      <span className="text-gray-500 text-sm pb-1">/ único</span>
+                    </div>
+                    <ul className="space-y-4 mb-10 flex-1 pointer-events-none">
+                      <li className="flex items-center gap-3 text-white text-sm font-medium">
+                        <Zap className="w-5 h-5 text-yellow-400 shrink-0 fill-yellow-400/20 group-hover:scale-125 transition-transform duration-300" />
+                        Limite de 10 RAs <span className="text-gray-400 text-xs font-normal ml-1">(Na mesma chave)</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-75" />
+                        Automação Completa Vitalícia
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-150" />
+                        Acesso Ilimitado sem Mensalidades
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-300 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 group-hover:scale-125 transition-transform duration-300 delay-200" />
+                        Suporte VIP Prioritário (WhatsApp)
+                      </li>
+                    </ul>
+                    <button
+                      onClick={() => handleCheckoutSubmit("Agência Vitalícia")}
+                      disabled={checkoutLoading}
+                      className="w-full py-4 rounded-xl border border-pink-500/20 bg-pink-500/10 text-white font-bold hover:bg-pink-500/20 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 relative z-10"
+                    >
+                      {checkoutLoading ? "Processando..." : "Adquirir Vitalício Agência"}
+                    </button>
+                  </TiltCard>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="mt-14 max-w-2xl mx-auto">
             <motion.div
