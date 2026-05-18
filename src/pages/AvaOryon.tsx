@@ -120,8 +120,8 @@ const FAQItem = ({
     >
       <div
         className={`border rounded-xl overflow-hidden backdrop-blur-xl transition-all duration-300 ${isOpen
-            ? 'bg-white/[0.04] border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.1)]'
-            : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.03] hover:border-purple-500/20 hover:shadow-[0_0_20px_rgba(168,85,247,0.05)]'
+          ? 'bg-white/[0.04] border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.1)]'
+          : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.03] hover:border-purple-500/20 hover:shadow-[0_0_20px_rgba(168,85,247,0.05)]'
           }`}
       >
         <button
@@ -203,7 +203,7 @@ const TiltCard = ({ children, className }: { children: React.ReactNode; classNam
 };
 
 // ─────────────────────────────────────────────
-// Main Page Component
+// Main Page Componentaaaaaaaaaaa
 // ─────────────────────────────────────────────
 const AvaOryon = () => {
   const navigate = useNavigate();
@@ -651,22 +651,20 @@ const AvaOryon = () => {
             <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-1.5 rounded-2xl flex gap-2 relative">
               <button
                 onClick={() => setPricingTab("individual")}
-                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 relative z-10 flex items-center gap-2 ${
-                  pricingTab === "individual"
+                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 relative z-10 flex items-center gap-2 ${pricingTab === "individual"
                     ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/35"
                     : "text-gray-400 hover:text-white"
-                }`}
+                  }`}
               >
                 <User className="w-4 h-4" />
                 Uso Individual
               </button>
               <button
                 onClick={() => setPricingTab("agency")}
-                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 relative z-10 flex items-center gap-2 ${
-                  pricingTab === "agency"
+                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 relative z-10 flex items-center gap-2 ${pricingTab === "agency"
                     ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/35"
                     : "text-gray-400 hover:text-white"
-                }`}
+                  }`}
               >
                 <Briefcase className="w-4 h-4" />
                 Planos Agência
