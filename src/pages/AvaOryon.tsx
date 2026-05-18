@@ -203,7 +203,7 @@ const TiltCard = ({ children, className }: { children: React.ReactNode; classNam
 };
 
 // ─────────────────────────────────────────────
-// Main Page Componentaaaaaaaaaaa
+// Main Page Componentaaaaaaaaaaaaz
 // ─────────────────────────────────────────────
 const AvaOryon = () => {
   const navigate = useNavigate();
@@ -652,8 +652,8 @@ const AvaOryon = () => {
               <button
                 onClick={() => setPricingTab("individual")}
                 className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 relative z-10 flex items-center gap-2 ${pricingTab === "individual"
-                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/35"
-                    : "text-gray-400 hover:text-white"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/35"
+                  : "text-gray-400 hover:text-white"
                   }`}
               >
                 <User className="w-4 h-4" />
@@ -662,8 +662,8 @@ const AvaOryon = () => {
               <button
                 onClick={() => setPricingTab("agency")}
                 className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 relative z-10 flex items-center gap-2 ${pricingTab === "agency"
-                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/35"
-                    : "text-gray-400 hover:text-white"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/35"
+                  : "text-gray-400 hover:text-white"
                   }`}
               >
                 <Briefcase className="w-4 h-4" />
